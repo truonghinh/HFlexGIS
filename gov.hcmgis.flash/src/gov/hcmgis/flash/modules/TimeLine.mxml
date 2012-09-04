@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="vertical" width="400" height="300" xmlns:skinComponents="gov.hcmgis.flash.skinComponents.*"
+		   creationComplete="init();">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:Animate id="rePos" targets="{[a]}" duration="300">
+			<s:SimpleMotionPath property="height" valueFrom="{a.height}" valueBy="100" />
+		</s:Animate>
+	</fx:Declarations>
+	<s:BorderContainer>
+		
+		<!--Left board-->
+		<skinComponents:EventBoard id="leftBoard" left="20" height="100%" width="48%">
+			<skinComponents:EventCardClass id="a" width="205" right="0" depth="2"/>
+			<s:Rect width="1" height="20"/>
+			
+			<skinComponents:EventCardClass width="{leftBoard.width-20}" depth="1"/>
+			<s:Button click="rePos.play()" label="click" />
+		</skinComponents:EventBoard>
+		
+		<!--Right board-->
+		<skinComponents:EventBoard id="rightBoard" right="0" height="100%" width="48%"/>
+		<skinComponents:TimeLineColumn id="col" width="5" minHeight="100" radiusX="5" radiusY="5" horizontalCenter="0" verticalCenter="0">
+			<skinComponents:fill>
+				<s:SolidColor color="0x5CA2A0" alpha="0.7"/>
+			</skinComponents:fill>
+		</skinComponents:TimeLineColumn>
+	</s:BorderContainer>
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			private var listEvents:XML;
+			private var loader:URLLoader=new URLLoader();
+			private function init():void
+			{
+				loader.load(new URLRequest("data/list_events.xml"));
+				loader.addEventListener(Event.COMPLETE,loaderComplete);
+			}
+			
+			private function loaderComplete(e:Event):void
+			{
+				listEvents=new XML(e.target.data);
+				Alert.show(listEvents.events[0].toString());
+				//trace(listEvents.events.*);
+			}
+		]]>
+	</fx:Script>
+</mx:Module>

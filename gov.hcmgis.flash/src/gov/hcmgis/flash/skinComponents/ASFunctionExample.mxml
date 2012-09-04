@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:XML id="extTxtFlow" source="../data/test2.xml" />
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.events.FlowElementMouseEvent;
+			import spark.utils.TextFlowUtil;
+			import mx.events.FlexEvent;
+			
+			/**
+			 * HTML string
+			 * Note the anchor using 'event:myEventType' to call an ActionScript method
+			 */
+			protected static const HTML: String = 	"<p>Hello, here is a link to "
+				+ "<a href='event:myEventType'>run my custom method</a>"
+				+ "</p>";
+			
+			/**
+			 * Adding listener to for event:myEventType defined in HTML
+			 * at a TextFlow of RichEditableText
+			 * 
+			 */			
+			protected function richtext1_initializeHandler(event:FlexEvent):void
+			{
+				myText.textFlow.addEventListener( 'myEventType', customMethodHandler );
+			}
+			
+			/**
+			 * Custom event handler for event:customMethod defined in HTML
+			 * 
+			 */				
+			protected function customMethodHandler( event:FlowElementMouseEvent ):void
+			{
+				result.text += "run custom method\n";
+			}
+			//textFlow="{ TextConverter.importToFlow( extTxtFlow, TextConverter.TEXT_FIELD_HTML_FORMAT ) }"
+		]]>
+	</fx:Script>
+	
+	
+	<s:RichEditableText
+		id="myText"
+		width="100%"
+		selectable="false"
+		editable="false"
+		initialize="richtext1_initializeHandler(event)"
+		textFlow="{TextFlowUtil.importFromXML(extTxtFlow) }"
+		/>
+	
+	<s:TextArea
+		id="result"
+		/>
+</s:VGroup>

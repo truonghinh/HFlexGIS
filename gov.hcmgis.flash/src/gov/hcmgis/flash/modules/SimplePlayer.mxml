@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="400" height="300">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:DateFormatter id="dateFormatter"
+						  formatString="NN:SS" />
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			public var VideoSource:String="assets/clips/videoplayback.flv";
+		public function getModuleTitle():String {
+		return "Video Module";
+		}
+			
+			public function set src(swfSource:String):void
+			{
+				
+				videoDisplay.source=swfSource;
+				videoDisplay.play();
+				
+			}
+		
+		/* Stop the video playback. */
+		public function stopVideo():void {
+		videoDisplay.stop();
+		}
+		
+		/* If the video is currently playing, pause playback. Otherwise, resume playback. */
+		public function playPauseVideo():void {
+		if (videoDisplay.playing) {
+		videoDisplay.pause();
+		} else {
+		videoDisplay.play();
+		}
+		}
+		
+		private function updateVideoTime():void {
+		/* If the playheadTime is 0, the DateFormatter returns an empty string.
+		To work around this we can default the time to 10ms if the playheadTime
+		is zero. */
+		var pTime:Date = new Date(videoDisplay.playheadTime * 1000 || 10);
+		var tTime:Date = new Date(videoDisplay.totalTime * 1000);
+		parentApplication.playheadTime.text = dateFormatter.format(pTime) + " / " + dateFormatter.format(tTime);
+		}
+		]]>
+	</fx:Script>
+	
+	<mx:VideoDisplay id="videoDisplay"
+					 playheadUpdate="updateVideoTime();" autoPlay="true" live="false" >
+		<mx:source>{VideoSource}</mx:source>
+	</mx:VideoDisplay>
+</mx:Module>

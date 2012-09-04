@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://blog.flexexamples.com/2010/03/19/skinning-the-track-on-a-spark-hslider-control-in-flex-4/ -->
+<s:SparkSkin name="YeHSliderSkin"
+			 xmlns:fx="http://ns.adobe.com/mxml/2009"
+			 xmlns:s="library://ns.adobe.com/flex/spark"
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+			 minHeight="11"
+			 alpha.disabled="0.5" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:includes="includes.*">
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<fx:Metadata>
+		[HostComponent("spark.components.HSlider")]
+	</fx:Metadata>
+	<fx:Script fb:purpose="styling">
+		<![CDATA[
+			//import flash.net.dns.AAAARecord;
+			
+			import mx.controls.Alert;
+			
+			//import org.openscales.geometry.basetypes.Unit;
+			
+			import spark.components.Label;
+			
+			/* Define the skin elements that should not be colorized.
+			For slider, the skin itself is colorized but the individual parts are not. */
+			static private const exclusions:Array = ["track", "thumb"];
+			
+			override public function get colorizeExclusions():Array {
+				return exclusions;
+			}
+			
+			override protected function initializationComplete():void {
+				useChromeColor = true;
+				super.initializationComplete();
+				//addEventPoint();
+			}
+			protected function whichYear():void{
+				Alert.show("hihi");
+			}
+//			protected function appendEventPoint():void{
+//				//var a:XML = <mx:Image top="0" width="4" height="6" left="{(1880-1600)*(hostComponent.width-7)/(2011-1600)}"
+//				//  source="@Embed(source='../img/trackEvent.png')" click="whichYear();" toolTip="{hostComponent.value}"/>;
+//				var a:Image = new Image();
+//				var b:UIComponent = new UIComponent;
+//				a.source="../img/trackEvent.png";
+//				a.top=0;
+//				a.width=4;
+//				a.height=6;
+//				a.left=(1880-1600)*(hostComponent.width-7)/(2011-1600);
+//				a.addEventListener(MouseEvent.CLICK,whichYear,false,0,true);
+//				b.addChild(a);
+//				grpEventPoint.addElement(b);
+//			}
+			protected function findParamLeftEventPoint(hostWidth:Number,year:Number,dleft:Number=0):Number{
+				return (year-1600)*(hostWidth-dleft)/(2011-1600);
+			}
+			protected function setHeight4EventPoint(height:Number=5):Number{
+				return height;
+			}
+//			protected function setStroke4EventPoint(color:uint=0x000000):IStroke{
+//				var stroke:IStroke;
+//				var solidStroke:SolidColorStroke;
+//				solidStroke.color=color;
+//				solidStroke.weight=1;
+//				//stroke=<s:stroke><s:SolidColorStroke color="{color}" weight="1"/></s:stroke>;
+//				return stroke;
+//			}
+			protected function setColor4EventPoint(color:uint=0x0000ff):uint{
+				return color;
+			}
+			protected function setToolTip(text:String):void{
+				var a:Label;
+				a.text="1698";
+				a.top=-20;
+				hostComponent.addChild(a);
+			}
+//			protected function addEventPoint():void{
+//				var piGrpEventPoint:Group =new Group();
+//				var eventPoint:includes.Rectangle;				
+//				var rect:Rect;
+//				var piUiComp:UIComponent=new UIComponent();
+//				var piGraphic:Graphic = new Graphic();
+//				var piColor:uint;
+//				
+//				eventPoint= new includes.Rectangle();
+//				piGraphic.bottom=0;
+//				piGraphic.x=findParamLeftEventPoint(hostComponent.width,2000);
+//				piGraphic.width=100;
+//				piGraphic.height=100;
+//				piGraphic.y=0;
+//				piColor=0x00ff00;
+//				
+//				piGraphic.graphics.beginFill(piColor,piGraphic.alpha);
+//				piGraphic.graphics.drawRect(piGraphic.x,piGraphic.y,piGraphic.width,piGraphic.height);
+//				piGraphic.graphics.endFill();
+//				piUiComp.addChild(piGraphic);
+//				grpEventPoint.addElement(piUiComp);
+//				hostComponent.addChild(grpEventPoint);
+				
+//			}
+		]]>
+	</fx:Script>
+	
+	<fx:Script>
+		<![CDATA[
+			[Embed(source="images/trackEvent.png")]
+			[Bindable]
+			public var Timetrack:Class;
+			[Embed(source="images/trackEvent_1.png")]
+			[Bindable]
+			public var Timetrack_1:Class;
+			
+			override protected function measure():void {
+				var thumbPos:Number = thumb.getLayoutBoundsX();
+				thumb.setLayoutBoundsPosition(0, thumb.getLayoutBoundsY());
+				super.measure();
+				thumb.setLayoutBoundsPosition(thumbPos, thumb.getLayoutBoundsY());
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<fx:Component id="dataTip">
+			<s:DataRenderer minHeight="24" minWidth="40" y="-34">
+				<s:Rect top="0" left="0" right="0" bottom="0">
+					<s:fill>
+						<s:SolidColor color="0x000000" alpha=".9"/>
+					</s:fill>
+					<s:filters>
+						<s:DropShadowFilter angle="90" color="0x999999" distance="3"/>
+					</s:filters>
+				</s:Rect>
+				<s:Label id="labelDisplay" text="{data}"
+						 horizontalCenter="0" verticalCenter="1"
+						 left="5" right="5" top="5" bottom="5"
+						 textAlign="center" verticalAlign="middle"
+						 fontWeight="normal" color="white" fontSize="11">
+				</s:Label>
+			</s:DataRenderer>
+		</fx:Component>
+	</fx:Declarations>
+	
+	<s:Button id="track"
+			  left="0" right="0" top="0" bottom="0"
+			  minWidth="33" width="100"
+			  skinClass="gov.hcmgis.flash.skins.skin4SliderTrack" />
+	
+	<s:Button id="thumb"
+			  top="0" bottom="0"
+			  width="11" height="11"
+			  label="{hostComponent.value.toString(16).toUpperCase()}"
+			  skinClass="spark.skins.spark.HSliderThumbSkin" />
+	<s:BorderContainer id="grpEventPoint" top="-7" width="{hostComponent.width}" left="0" height="6" borderVisible="false" backgroundAlpha="0">
+		
+		<mx:Image id="y1698" source="{Timetrack}" x="{(grpEventPoint.width)*(1698-1680+1)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1698:Bản đồ LeBrun" buttonMode="true"/>
+		<s:Label x="{y1698.x-12}" y="-12" height="12" text="1698" fontWeight="bold" backgroundColor="0xDB5050" color="0xffffff"
+				 paddingTop="2"/>
+		
+		<mx:Image id="y1772" source="{Timetrack_1}" x="{(grpEventPoint.width)*(1772-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1772:Xây Lũy Bán Bích" buttonMode="true"/>
+		<s:Label x="{y1772.x-12}" y="-12" height="12" text="1772" fontWeight="bold" backgroundColor="0x0000ff" color="0xffffff"
+				 paddingTop="2"/>
+		
+		<mx:Image id="y1789" source="{Timetrack_1}" x="{(grpEventPoint.width)*(1789-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1789:Xây Đồn Thảo Câu và Giác Ngư" buttonMode="true"/>
+		<!--<s:Label x="{y1789.x-12}" y="-12" height="12" text="1789" fontWeight="bold" backgroundColor="0xDB5050" color="0xffffff"
+				 paddingTop="2"/>-->
+		
+		<mx:Image id="y1790" source="{Timetrack_1}" x="{(grpEventPoint.width)*(1790-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1790:Xây Thành Bát Quái" buttonMode="true"/>
+		<s:Label x="{y1790.x-12}" y="-12" height="12" text="1790" fontWeight="bold" backgroundColor="0x0000ff" color="0xffffff"
+				 paddingTop="2"/>
+		
+		<!--<mx:Image id="y1799" source="{Timetrack}" x="{(grpEventPoint.width)*(1799-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1799:Bản đồ Lebrun" buttonMode="true"/>
+		<s:Label x="{y1799.x-12}" y="-12" height="12" text="1799" fontWeight="bold" backgroundColor="0xDB5050" color="0xffffff"
+				 paddingTop="2"/>-->
+		
+		<!--<mx:Image id="y1790" source="{Timetrack}" x="{(grpEventPoint.width+2)*(1790-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1790:Xây Thành Bát Quái" buttonMode="true"/>
+		<s:Label x="{y1790.x-12}" y="-12" height="12" text="1790" fontWeight="bold" backgroundColor="0xDB5050" color="0xffffff"
+				 paddingTop="2"/>-->
+		
+		<mx:Image id="y1802" source="{Timetrack}" x="{(grpEventPoint.width)*(1802-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1802:Bản đồ Trần Văn học" buttonMode="true"/>
+		<s:Label x="{y1802.x-12}" y="-12" height="12" text="1802" fontWeight="bold" backgroundColor="0xDB5050" color="0xffffff"
+				 paddingTop="2"/>
+		
+		
+		
+		<!--<mx:Image id="y1816" source="{Timetrack}" x="{(grpEventPoint.width-1)*(1816-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1816:Bản đồ Trần Văn học" buttonMode="true"/>
+		<s:Label x="{y1816.x-12}" y="-12" height="12" text="1816" fontWeight="bold" backgroundColor="0xDB5050" color="0xffffff"
+				 paddingTop="2"/>-->
+		
+		<mx:Image id="y1836" source="{Timetrack_1}" x="{(grpEventPoint.width)*(1836-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1836:Xây thành Phụng" buttonMode="true"/>
+		<s:Label x="{y1836.x-12}" y="-12" height="12" text="1836" fontWeight="bold" backgroundColor="0x0000ff" color="0xffffff"
+				 paddingTop="2"/>
+		
+		<mx:Image id="y1859" source="{Timetrack}" x="{(grpEventPoint.width-2)*(1859-1680)/(2011-1680)}" y="0" height="8" width="5" 
+				  toolTip="1859:Bản đồ De Larclause" buttonMode="true"/>
+		<s:Label x="{y1859.x-12}" y="-12" height="12" text="1859" fontWeight="bold" backgroundColor="0xDB5050" color="0xffffff"
+				 paddingTop="2"/>
+		
+	</s:BorderContainer>
+	
+	
+</s:SparkSkin>

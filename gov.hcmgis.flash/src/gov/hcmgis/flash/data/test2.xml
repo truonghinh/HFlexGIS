@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- externalTextFlow.xml -->
+<TextFlow xmlns="http://ns.adobe.com/textLayout/2008">
+    <p>Hello, here is a link to<a href='event:myEventType'>run my custom method</a></p>
+    
+    <img source='images/thanh bat quai.jpg' width='20' height='20' />
+</TextFlow>

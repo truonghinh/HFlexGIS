@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" version="3">
+  <includeClasses>
+    <classEntry path="gov.hcmgis.flash.skinComponents.XtraTextPad"/>
+    <classEntry path="gov.hcmgis.flash.skins.XtraTextPadSkin"/>
+    <classEntry path="gov.hcmgis.flash.skinContainers.XtraTextEdit"/>
+    <classEntry path="gov.hcmgis.flash.skins.XtraTextEditSkin"/>
+    <classEntry path="gov.hcmgis.flash.skinComponents.XtraTextPadClass"/>
+    <classEntry path="gov.hcmgis.flash.skinComponents.EventCardClass"/>
+    <classEntry path="gov.hcmgis.flash.skins.EventCardSkin"/>
+    <classEntry path="gov.hcmgis.flash.skins.XtraCloseButtonSkin"/>
+    <classEntry path="gov.hcmgis.flash.skinComponents.ImageButton"/>
+    <classEntry path="gov.hcmgis.flash.skins.ImageButtonSkin"/>
+    <classEntry path="gov.hcmgis.flash.skinComponents.TimelineBoard"/>
+    <classEntry path="gov.hcmgis.flash.skinComponents.TimeLineColumn"/>
+    <classEntry path="gov.hcmgis.flash.skins.TimelineBoardSkin"/>
+    <classEntry path="gov.hcmgis.flash.skinComponents.EventBoard"/>
+    <classEntry path="gov.hcmgis.flash.skinComponents.ASFunctionExample"/>
+    <classEntry path="gov.hcmgis.flash.views.ViewStack"/>
+    <classEntry path="gov.hcmgis.flash.skins.PanelSkin"/>
+    <classEntry path="gov.hcmgis.flash.modules.TimeLine"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

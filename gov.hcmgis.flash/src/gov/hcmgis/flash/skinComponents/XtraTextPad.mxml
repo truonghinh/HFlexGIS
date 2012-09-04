@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableComponent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Metadata>
+		[SkinState("normal")]
+		[SkinState("disabled")]
+	</fx:Metadata>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.core.IVisualElementContainer;
+			
+			import spark.components.Button;
+			import spark.components.supportClasses.TextBase;
+			
+			[SkinPart(required="true")]
+			public var labelDisplay:TextBase;
+			
+			[SkinPart(required="false")]
+			public var closeButton:Button;
+			
+			private var _text:String;
+			
+			public function get text():String
+			{
+				return _text;
+			}
+			
+			public function set text(value:String):void
+			{
+				if (_text == value)
+					return;
+				_text = value;
+				if (labelDisplay)
+					labelDisplay.text = value;
+			}
+			
+			override public function set enabled(value:Boolean) : void
+			{
+				if (enabled != value)
+					invalidateSkinState();
+				super.enabled = value;
+			}
+			
+			override protected function getCurrentSkinState() : String
+			{
+				if (!enabled)
+					return "disabled";
+				return "normal"
+			}
+			
+			override protected function partAdded(partName:String, instance:Object) : void
+			{
+				super.partAdded(partName, instance);
+				
+				if (instance == labelDisplay)
+					labelDisplay.text = _text;
+				if (instance == closeButton)
+					closeButton.addEventListener(MouseEvent.CLICK, closeButton_clickHandler);
+			}
+			
+			override protected function partRemoved(partName:String, instance:Object) : void
+			{
+				super.partRemoved(partName, instance);
+				
+				if (instance == closeButton)
+					closeButton.removeEventListener(MouseEvent.CLICK, closeButton_clickHandler);
+			}
+			
+			protected function closeButton_clickHandler(event:MouseEvent) : void
+			{
+				event.stopPropagation();
+				IVisualElementContainer(parent).removeElement(this);
+			}
+		]]>
+	</fx:Script>
+</s:SkinnableComponent>

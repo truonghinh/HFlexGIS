@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:skinComponents="gov.hcmgis.flash.skinComponents.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("gov.hcmgis.flash.skinComponents.TimelineBoard")]
+	</fx:Metadata>
+	<fx:Declarations>
+		<s:Animate id="rePos" targets="{[a]}" duration="300">
+			<s:SimpleMotionPath property="height" valueFrom="{a.height}" valueBy="100" />
+		</s:Animate>
+	</fx:Declarations>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=col, type=gov.hcmgis.flash.skinComponents.TimeLineColumn, required=true
+	-->
+	<!--<s:Scroller width="100%">-->
+	
+	<s:Group id="mainBoard" width="96%" height="100%" top="50">
+		<!--Left board-->
+		<skinComponents:EventBoard id="leftBoard" left="20" height="100%" width="48%" >
+			<skinComponents:EventCardClass id="a" width="205" right="0" depth="2"/>
+			<s:Rect width="1" height="20"/>
+			
+			<skinComponents:EventCardClass width="{leftBoard.width-20}" depth="1"/>
+			<s:Button click="rePos.play()" label="click" />
+		</skinComponents:EventBoard>
+		
+		<!--Right board-->
+		<skinComponents:EventBoard id="rightBoard" right="0" height="100%" width="48%"/>
+		<skinComponents:TimeLineColumn id="col" width="5" minHeight="100" radiusX="5" radiusY="5" horizontalCenter="0" verticalCenter="0">
+			<skinComponents:fill>
+				<s:SolidColor color="0x5CA2A0" alpha="0.7"/>
+			</skinComponents:fill>
+		</skinComponents:TimeLineColumn>
+		
+	</s:Group>
+	<s:Rect right="0" height="100%" width="20"/>
+	<!--<s:VScrollBar id="mainScroller" height="200" viewport="{mainBoard}"  right="0"/>-->
+	<!--</s:Scroller>-->
+	
+</s:Skin>

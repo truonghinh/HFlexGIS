@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:skinComponents="gov.hcmgis.flash.skinComponents.*" xmlns:skins="gov.hcmgis.flash.skins.*" xmlns:display="gov.hcmgis.flash.display.*" xmlns:htmlFilter="com.htmlFilter.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("gov.hcmgis.flash.skinComponents.EventCardClass")]
+	</fx:Metadata>
+	<fx:Declarations>
+		<fx:XML id="extTxtFlow" source="../data/test2.xml" />
+	</fx:Declarations>
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=closeButton, type=spark.components.Button, required=false
+	name=textInput, type=spark.components.RichEditableText, required=true
+	-->
+	<s:Rect id="rect" x="{myScroller.x-10}" 
+			y="{myScroller.y-10}"
+			width="{myScroller.width+20}" 
+			height="{myScroller.height+description.height+20}">
+		<s:stroke>
+			<s:SolidColorStroke color="0xC7DFDE" weight="10" alpha="0.3"/>
+		</s:stroke>
+	</s:Rect>
+	
+	
+	<s:Scroller id="myScroller"
+				width="{this.width-5}"
+				x="0">
+		<s:RichEditableText id="textInput" 
+							minHeight="25"
+							selectable="false"
+							editable="false"
+							heightInLines="4"
+							widthInChars="20"
+							initialize="richtext1_initializeHandler(event)"
+							paddingLeft="4" paddingTop="4"
+							paddingRight="4" paddingBottom="4" textFlow="{TextFlowUtil.importFromXML(extTxtFlow)}"/>	</s:Scroller>
+	<htmlFilter:htmlText bottom="0" id="description"
+						 verticalScrollPolicy="off"
+						  />
+	<!--<mx:Text y="{myScroller.height+10}" id="desc">
+		<mx:htmlText>
+			<![CDATA[
+			<p>This is a bulleted list:<li>First Item</li><li>Second Item</li></p>
+			]]>
+		</mx:htmlText>
+	</mx:Text>-->
+	<!--<skinComponents:ImageButton id="closeButton"
+			  width="18"
+			  right="-10" top="-22" 
+			  height="18"
+			  backgroundFill="@Embed('images/close.png')"
+			  skinClass="gov.hcmgis.flash.skins.ImageButtonSkin"/>
+	<skinComponents:ImageButton id="hideButton"
+			  width="18"
+			  right="10" top="-22" 
+			  height="18" styleName="customButton"
+			  backgroundFill="@Embed('images/minimize.png')"
+			  skinClass="gov.hcmgis.flash.skins.ImageButtonSkin"/>-->
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.elements.TextFlow;
+			import flashx.textLayout.events.FlowElementMouseEvent;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			import spark.utils.TextFlowUtil;
+
+			
+			[Bindable]
+			public var txt:String = "<div>" +
+				"<img source='images/thanh bat quai.jpg' width='20' height='20' />" +
+				"<p>this is a test" + "<span fontWeight='bold'>bold</span>" +
+				"</p></div>";
+			
+			/**
+			 * Adding listener to for event:myEventType defined in HTML
+			 * at a TextFlow of RichEditableText
+			 * 
+			 */			
+			protected function richtext1_initializeHandler(event:FlexEvent):void
+			{
+				textInput.textFlow.addEventListener( 'myEventType', customMethodHandler );
+			}
+			
+			/**
+			 * Custom event handler for event:customMethod defined in HTML
+			 * 
+			 */				
+			protected function customMethodHandler( event:FlowElementMouseEvent ):void
+			{
+				//result.text += "run custom method\n";
+				Alert.show("hello");
+			}
+		]]>
+	</fx:Script>
+</s:Skin>

@@ -1,0 +1,27 @@
+<!--<project name='gov.hcmgis.flash.intro' default='mxml'>
+
+  <target name='mxml'>
+  <property name='compiler' location='E:\soft\classes\developer\flash\flex_sdk_4.6.0.23201B\bin\mxmlc.exe' />
+  <exec executable='${compiler}' failonerror='true'>
+  <arg line='-output E:\rachel.swf' />
+  <arg line='D:\projects\PTKGDT\Sourcecode\ptkgdt_gd2\gov.hcmgis.flash.intro\src\Main.mxml' />
+  </exec>
+  <echo>mxml file compiled successfully</echo>
+  <echo>swf file generated successfully</echo>
+  </target>
+
+
+</project>-->
+
+<project name="PTKGDT" default="Compile Swf" basedir=".">
+    <property name="mxmlc" location="E:\soft\classes\developer\flash\flex_sdk_4.6.0.23201B\bin\mxmlc.exe" />
+	<target name="Compile Swf">
+	<exec executable="${mxmlc}" dir="." failonerror="true">
+	<arg line="src/Main.mxml"/>
+	<arg line="-source-path D:\projects\PTKGDT\Sourcecode\ptkgdt_gd2\gov.hcmgis.ptkgdt.web"/>
+	<arg line="-default-size 400 300"/>
+	<arg line="-output bin/ptkgdt.swf"/>
+	</exec>
+	<external-library-path dir="${FLEX_HOME}/frameworks/libs" includes="*.swc"/>
+	</target>
+</project>

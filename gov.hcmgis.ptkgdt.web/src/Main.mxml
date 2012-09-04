@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:os="http://openscales.org"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:views="gov.hcmgis.flash.views.*" xmlns:st="library://ns.tink.ws/flex/spark"
+			   initialize="initCollections();" xmlns:skinComponents="gov.hcmgis.flash.skinComponents.*" xmlns:modules="gov.hcmgis.flash.modules.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:Number id="numElementsCreated">0</fx:Number>
+		<fx:Model id="imageData" source="assets/xml/images.xml"/>
+		<!--<fx:Model id="imageData"/>-->
+		<fx:XML id="treeData">
+			<node label="Item">
+				<node label="Folder">
+					<node label="Item"/>
+					<node label="Item"/>
+					<node label="Iteml"/>
+					<node label="Item"/>
+				</node>
+				<node label="Folder">
+					<node label="Item"/>
+					<node label="Item"/>
+					<node label="Iteml"/>
+					<node label="Item"/>
+				</node>
+				<node label="Item"/>
+				<node label="Item"/>
+			</node>
+		</fx:XML>
+		
+		<fx:XMLList id="dataGridData">
+			<employee>
+				<name>Christina Coenraets</name>
+				<phone>555-219-2270</phone>
+				<email>ccoenraets@fictitious.com</email>
+				<active>true</active>
+			</employee>
+			<employee>
+				<name>Joanne Wall</name>
+				<phone>555-219-2012</phone>
+				<email>jwall@fictitious.com</email>
+				<active>true</active>
+			</employee>
+			<employee>
+				<name>Maurice Smith</name>
+				<phone>555-219-2012</phone>
+				<email>maurice@fictitious.com</email>
+				<active>false</active>
+			</employee>
+			<employee>
+				<name>Mary Jones</name>
+				<phone>555-219-2000</phone>
+				<email>mjones@fictitious.com</email>
+				<active>true</active>
+			</employee>
+		</fx:XMLList>
+		
+		<s:Fade id="fadeIn" alphaFrom="0.0" alphaTo="1.0" />
+		<s:Fade id="fadeOut" alphaFrom="1.0" alphaTo="0.0" />
+		<mx:DateFormatter id="dateFormatter" formatString="NN:SS" />
+	</fx:Declarations>
+	<fx:Style source="styles/darkroom.css"/>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace os "http://openscales.org";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace views "gov.hcmgis.flash.views.*";
+		@namespace st "library://ns.tink.ws/flex/spark";
+		@namespace skinComponents "gov.hcmgis.flash.skinComponents.*";
+		@namespace modules "gov.hcmgis.flash.modules.*";
+		@font-face {
+			src:url("assets/fonts/arial.ttf");
+			font-family: Arial;
+		}
+		
+		.timeStyle {
+			color: #FFFFFF;
+			font-family: arial;
+			font-size: 12;
+		}
+		
+		.playPauseStyle {
+			/* play button skins */
+			skin: Embed('assets/images/control_play.png');
+			downSkin: Embed('assets/images/control_play_blue.png');
+			
+			/* pause button skins */
+			selectedUpSkin: Embed('assets/images/control_pause.png');
+			selectedOverSkin: Embed('assets/images/control_pause.png');
+			selectedDownSkin: Embed('assets/images/control_pause_blue.png');
+		}
+		
+		.stopStyle {
+			skin: Embed('assets/images/control_stop.png');
+			downSkin: Embed('assets/images/control_stop_blue.png');
+		}
+		
+		.controllerStyle {
+			bottom: 5;
+			left: 5;
+			right: 5;
+			paddingBottom: 5;
+			paddingLeft: 5;
+			paddingRight: 5;
+			paddingTop: 5;
+			alpha: 0;
+			background-color: #000000;
+			background-alpha: 0.5;
+		}
+	</fx:Style>
+	
+	
+	<s:BorderContainer borderVisible="false" backgroundColor="#000000" horizontalCenter="0" verticalCenter="0" width="100%" height="100%" borderWeight="1" borderColor="#888888">
+		<s:layout>
+			<s:VerticalLayout gap="0" paddingTop="2"/>
+		</s:layout>
+		<!--<s:BorderContainer width="100%" height="10" borderVisible="false" backgroundColor="#000000">
+			<s:layout>
+				<s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
+			</s:layout>
+			<mx:Button width="20" height="8" click="sizeTopPanel();" styleName="collapseUp" toggle="true"/>
+		</s:BorderContainer>-->
+		<mx:VBox width="100%" height="10" verticalAlign="middle" horizontalAlign="center">
+			<mx:Button width="20" height="8" click="sizeTopPanel();" styleName="collapseUp" toggle="true"/>
+		</mx:VBox>
+		<!-- Start Top Panel Area -->
+		
+		<!--<s:Group width="100%"  id="topPanel" resizeEffect="Resize" >
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle" paddingBottom="0" paddingLeft="14" paddingRight="14"/>
+			</s:layout>
+			<mx:Label text="DARKROOM" styleName="appTitle"/>
+			<mx:Spacer height="100%" width="100%"/>
+			
+			<mx:LinkBar id="navBar" styleName="sectionLinks" verticalAlign="middle"/>
+			<s:TabBar id="navBar" styleName="sectionLinks" width="200" dataProvider="{middleStack}" labelFunction="labelFunction"/>
+			<mx:LinkBar id="navBar" styleName="sectionLinks" verticalAlign="middle" dataProvider="{middleStack}" labelFunction="labelFunction"/>
+		</s:Group>-->
+		<mx:HBox width="100%" verticalAlign="middle" id="topPanel" resizeEffect="Resize" paddingBottom="0" paddingLeft="14" paddingRight="14">
+			<mx:Label text="DARKROOM" styleName="appTitle"/>
+			<mx:Spacer height="100%" width="100%"/>
+			<s:TabBar id="navBar" styleName="sectionLinks" width="300" dataProvider="{middleStack}" labelFunction="labelFunction"/>
+			<!--<mx:LinkBar id="navBar" styleName="sectionLinks" verticalAlign="middle" dataProvider="{middleStack}"/>-->
+		</mx:HBox>
+		
+		<!-- End Top Panel Area -->
+		<mx:HBox horizontalGap="0" width="100%" height="100%">
+			<mx:VBox width="14" height="100%" verticalAlign="middle" paddingLeft="2">
+				<mx:Button width="10" height="20" click="sizeLeftPanel();" toggle="true" styleName="collapseLeft"/>
+			</mx:VBox>
+			
+			<mx:HDividedBox width="100%" height="100%" borderStyle="solid" borderColor="#666666" dividerAlpha="0" horizontalGap="2" backgroundColor="#000000" paddingLeft="2" paddingRight="2" paddingTop="2" paddingBottom="2">
+				
+				<!-- Start Left Panel Area -->
+				
+				<mx:HBox id="leftPanel" width="246" height="100%" horizontalGap="0" resizeEffect="Resize">
+					<s:BorderContainer width="11" height="100%" backgroundColor="#000000" borderVisible="false">
+						<s:layout>
+							<s:VerticalLayout />
+						</s:layout>
+						<s:BorderContainer width="9" height="{navBoxGroup.height}" backgroundImage="@Embed(source='/assets/images/col.jpg')" borderVisible="false">
+							<s:layout>
+								<s:VerticalLayout />
+							</s:layout>
+						</s:BorderContainer>
+						<mx:Spacer width="9" height="100%"/>
+						<s:Group width="9" height="{leftBottomBttns.height}" styleName="linesBg">
+							<s:layout>
+								<s:VerticalLayout />
+							</s:layout>
+						</s:Group>
+					</s:BorderContainer>
+					<s:BorderContainer width="100%" height="100%" styleName="darkGreyShadowBg" borderStyle="inset" borderWeight="2">
+						<s:layout>
+							<s:VerticalLayout paddingBottom="0" paddingLeft="6" paddingRight="6" paddingTop="6" gap="0"/>
+						</s:layout>	
+						
+						<s:BorderContainer width="100%" borderStyle="inset" id="navBoxGroup">
+							<s:layout>
+								<s:VerticalLayout paddingBottom="6" gap="0"/>
+							</s:layout>
+							<s:Group width="100%" height="30">
+								<s:layout>
+									<s:HorizontalLayout gap="0" verticalAlign="middle"/>
+								</s:layout>
+								<mx:Button id="navToggle" label="Navigator" styleName="sectionButton" toggle="true" height="20" selected="true" width="92" click="sizeNavBox()"/>
+								<mx:Spacer height="100%" width="100%"/>
+								<mx:ToggleButtonBar styleName="toolToggleBar">
+									<mx:dataProvider>
+										<fx:Array>
+											<fx:Object label="FIT"/>
+											<fx:Object label="FILL"/>
+											<fx:Object label="1:1"/>
+											<fx:Object label="3:1"/>
+										</fx:Array>
+									</mx:dataProvider>
+								</mx:ToggleButtonBar>
+							</s:Group>
+							<s:Group width="100%" height="200" styleName="darkGreyBg" resizeEffect="Resize" id="navBox">
+								<s:layout>
+									<s:VerticalLayout />
+								</s:layout>
+							</s:Group>
+						</s:BorderContainer>
+						
+						<s:Group id="bottomBoxHolder" width="100%" height="100%" >
+							<s:Scroller width="100%" height="100%" verticalScrollPolicy="auto">
+								<s:Group id="bottomBoxGroup" width="{bottomBoxHolder.width-16}">
+									<s:layout>
+										<s:VerticalLayout gap="0"/>
+									</s:layout>
+									<!--<s:Scroller verticalScrollPolicy="off">-->
+									
+									<s:Group width="100%" height="30" >
+										<s:layout>
+											<s:HorizontalLayout verticalAlign="middle"/>
+										</s:layout>
+										<mx:Button label="Library" styleName="sectionButton" toggle="true" height="20" click="sizeLibraryBox()"/>
+									</s:Group>
+									
+									<s:Group styleName="lightGreyBg" width="100%" height="8" id="libBox" resizeEffect="Resize">
+										<s:layout>
+											<s:VerticalLayout />
+										</s:layout>
+									</s:Group>
+									
+									<s:Group width="100%" height="30" >
+										<s:layout>
+											<s:HorizontalLayout verticalAlign="middle"/>
+										</s:layout>
+										<mx:Button label="Find" styleName="sectionButton" toggle="true" height="20" click="sizeFindBox()"/>
+									</s:Group>
+									
+									<s:Group width="100%" height="6" styleName="lightGreyBg"  id="findBox" resizeEffect="Resize">
+										<s:layout>
+											<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="6"/>
+										</s:layout>
+										<s:Group width="100%">
+											<s:layout>
+												<s:HorizontalLayout />
+											</s:layout>
+											<mx:CheckBox label="Any Text" paddingTop="2"/>
+											<mx:Spacer width="100%" height="20"/>
+											<mx:ComboBox>
+												<mx:dataProvider>
+													<fx:Array>
+														<fx:Object label="Containing All"/>
+														<fx:Object label="Item"/>
+														<fx:Object label="Item"/>
+														<fx:Object label="Item"/>
+														<fx:Object label="Item"/>
+													</fx:Array>
+												</mx:dataProvider>
+											</mx:ComboBox>
+										</s:Group>
+									</s:Group>
+									
+									<s:Group width="100%" height="30">
+										<s:layout>
+											<s:HorizontalLayout verticalAlign="middle"/>
+										</s:layout>
+										<mx:Button label="Folders" styleName="sectionButton" toggle="true" height="20" click="sizeFolderBox()"/>
+										<mx:Spacer height="100%" width="100%"/>
+										<mx:Button styleName="plus" width="10" height="10"/>
+									</s:Group>
+									
+									<s:Group width="100%" height="6" styleName="lightGreyBg" id="folderBox" resizeEffect="Resize" >
+										<s:layout>
+											<s:VerticalLayout paddingLeft="1" paddingRight="2" paddingTop="1" paddingBottom="2"/>
+										</s:layout>
+										<mx:Tree width="100%" height="100%" id="tree" showRoot="false" labelField="@label" creationComplete="initTree();"></mx:Tree>
+									</s:Group>
+									
+									<s:Group width="100%" height="30" >
+										<s:layout>
+											<s:HorizontalLayout verticalAlign="middle"/>
+										</s:layout>
+										<mx:Button label="Collections" styleName="sectionButton" toggle="true" height="20" click="sizeCollectBox()"/>
+										<mx:Spacer height="100%" width="100%"/>
+										<mx:Button styleName="plus" width="10" height="10"/>
+									</s:Group>
+									<s:Group width="100%" height="8" styleName="lightGreyBg" id="collectBox" resizeEffect="Resize">
+										<s:layout>
+											<s:VerticalLayout />
+										</s:layout>
+									</s:Group>
+									
+									<s:Group width="100%" height="30" >
+										<s:layout>
+											<s:HorizontalLayout verticalAlign="middle"/>
+										</s:layout>
+										<mx:Button label="Keyword Tags" styleName="sectionButton" toggle="true" height="20" click="sizeTagBox()"/>
+										<mx:Spacer height="100%" width="100%"/>
+										<mx:Button styleName="plus" width="10" height="10"/>
+									</s:Group>
+									<s:Group width="100%" height="8" styleName="lightGreyBg" id="tagsBox" resizeEffect="Resize">
+										<s:layout>
+											<s:VerticalLayout />
+										</s:layout>
+									</s:Group>
+									
+									<s:Group width="100%" height="30" >
+										<s:layout>
+											<s:HorizontalLayout verticalAlign="middle"/>
+										</s:layout>
+										<mx:Button label="Metadata Browser" styleName="sectionButton" toggle="true" height="20" click="sizeMetaBox()"/>
+									</s:Group>
+									<s:Group width="100%" height="8" styleName="lightGreyBg" id="metaBox" resizeEffect="Resize">
+										<s:layout>
+											<s:VerticalLayout />
+										</s:layout>
+									</s:Group>
+									
+									<s:Group width="100%" >
+										<s:layout>
+											<s:VerticalLayout horizontalAlign="center" paddingTop="10"/>
+										</s:layout>
+										<mx:Image horizontalAlign="center">
+											<mx:source>@Embed(source='styles/darkroom.swf',symbol='finial')</mx:source>
+										</mx:Image>
+									</s:Group>
+									<!--</s:Scroller>-->
+								</s:Group>
+								
+								
+								
+							</s:Scroller>
+							
+						</s:Group>
+						
+						<s:Group width="100%"  id="leftBottomBttns">
+							<s:layout>
+								<s:VerticalLayout horizontalAlign="center" paddingBottom="4"/>
+							</s:layout>
+							<mx:HRule width="100%"/>
+							<s:Group>
+								<s:layout>
+									<s:HorizontalLayout gap="5"/>
+								</s:layout>
+								<mx:Button label="Import..." width="106" height="30" fontSize="16"/>
+								<mx:Button label="Export..." width="106" height="30" fontSize="16" enabled="false"/>
+							</s:Group>
+						</s:Group>
+						
+					</s:BorderContainer>
+				</mx:HBox>
+				<!-- End Left Panel Area -->
+				
+				<!-- Start Middle Panel Area -->
+				<s:BorderContainer height="100%" width="100%" styleName="centerLightGreyBg" borderColor="#000000" borderWeight="1" backgroundColor="#000000">
+					<s:layout>
+						<s:VerticalLayout gap="0"/>
+					</s:layout>	
+					
+					<!-- view stact -->
+					<st:Navigator id="middleStack" width="100%" height="100%">
+						<s:Panel id="pnlVideo" width="100%" height="100%" title="Video" creationComplete="numElementsCreated++;" skinClass="gov.hcmgis.flash.skins.PanelSkin">
+							<!--<mx:LinkButton x="10" y="368" label="LinkButton"/>
+							<mx:Image source="@Embed(source='/assets/images/largeImage1.jpg')" horizontalCenter="0" verticalCenter="0"/>-->
+							<!--<modules:SimplePlayer src="assets/clips/videoplayback1.flv"/>-->
+							<mx:Canvas rollOver="showControls()" rollOut="hideControls()" height="100%" width="100%">
+								<mx:VideoDisplay id="player" source="assets/clips/videoplayback_2.flv" height="100%" width="100%" autoPlay="true"/>
+								<!--<s:Button label="Click" click="player.mx_internal::videoPlayer.stop(); player.source='assets/clips/videoplayback.flv'"/>-->
+							
+								<mx:HBox id="controls" styleName="controllerStyle" alpha="0.0"> 
+									<mx:Button id="playPauseButton" toggle="true" selected="{player.playing}" click="playPauseButton_click(event)" />
+									<mx:Button id="stopButton" click="stopButton_click(event)" />
+									<!--<mx:HSlider id="slider" width="100%" 
+												allowTrackClick="true"
+												invertThumbDirection="true"
+												liveDragging="false"
+												maximum="{player.totalTime}"
+												minimum="0"
+												thumbPress="slider_thumbPress()"
+												thumbRelease="slider_thumbRelease()"
+												tickLength="0"
+												mouseDown=" slider_thumbPress()"
+												
+												mouseUp="slider_thumbRelease()"
+												tickInterval="1"
+												value="{player.playheadTime}" />-->
+									<s:HSlider skinClass="gov.hcmgis.flash.skins.skin4Slider" id="slider" width="100%" value="{player.playheadTime}" maximum="{player.totalTime}"
+											   minimum="0" snapInterval="1" change="slider_thumbPress();slider_thumbRelease();" thumbPress="isMoving=true; slider_thumbPress()"
+											   thumbRelease="isMoving=false; slider_thumbRelease()" />
+									<mx:Spacer width="100%" />
+									<mx:Label id="time" styleName="timeStyle" />
+								</mx:HBox> 
+							</mx:Canvas>
+						</s:Panel>
+						<s:Panel width="100%" height="100%" title="Wiki-Time" backgroundColor="0x00FF00" creationComplete="numElementsCreated++" skinClass="gov.hcmgis.flash.skins.PanelSkin">
+							<!--<s:VGroup id="t" width="100%" height="100%">
+								<skinComponents:TimelineBoard id="tim"  width="100%" height="100%"/>
+							</s:VGroup>-->
+							<mx:Canvas width="100%" height="100%">
+								<modules:TimeLine width="100%" height="100%"/>
+							</mx:Canvas>
+							
+						</s:Panel>
+						<s:Panel width="100%" height="100%" title="Map" backgroundColor="0x00FF00" creationComplete="numElementsCreated++" skinClass="gov.hcmgis.flash.skins.PanelSkin">
+							<os:Map id="map_fullwindow_showmap" name="MAP_FULL_MAP"
+									width="100%"
+									height="100%"
+									zoom="16"
+									center="106.6941838378906,10.7820807723999"
+									x="0" y="0">
+								<os:WMS id="wms_fullmap_ranhquan" name="WMS_RANH_QUAN"
+										url="http://hcmgisportal.vn/geoserver/wms"
+										layers="webgis:hcm_dghc_qh_25000"
+										format="image/jpeg"
+										isFixed="false" numZoomLevels="20"/>
+								<os:WMS id="wms_fullmap_thuyhe_pl" name="WMS_THUY_HE_PL"
+										url="http://hcmgisportal.vn/geoserver/wms"
+										layers="webgis:thuy_he_pl"
+										format="image/png"
+										isFixed="false" numZoomLevels="20"
+										transparent="true"/>
+								
+								<os:WMS id="wms_fullmap_thuyhe_ln" name="WMS_THUY_HE_LN"
+										url="http://hcmgisportal.vn/geoserver/wms"
+										layers="webgis:thuy_he_line"
+										format="image/png"
+										isFixed="false" numZoomLevels="20"
+										transparent="true"/>
+								
+								<os:WMSC id="wms_fullmap_giaothong_pl" name="WMS_GIAO_THONG_PL"
+										 url="http://hcmgisportal.vn/geoserver/wms"
+										 layers="webgis:gt_giaothongvung"
+										 format="image/png"
+										 isFixed="false"
+										 transparent="true" numZoomLevels="20"/>
+								<os:WMSC id="wms_fullmap_giaothong_ln" name="WMS_GIAO_THONG_LN"
+										 url="http://hcmgisportal.vn/geoserver/wms"
+										 layers="webgis:gt_giaothongduong"
+										 format="image/png" numZoomLevels="20"
+										 isFixed="false" transparent="true" styleName="DefaultLineStyle" tiled="true"/>
+								
+								<!--os:Maplint name="maplint" maxZoomLevel="40" numZoomLevels="40" z="1"/>-->
+								<!--<os:Mapnik name="Mapnik" proxy="http://www.openscales.org/proxy.php?url="/>-->
+								<!-- Thanh Bat Quai. index: 1 -->
+								<!--<os:KML id="khungthanh" name="khungthanh" url="srcview/source/kmlfile/khungthanh.kml"
+								style="{Style.getDefaultSurfaceStyle()}" alpha="0.3"/>-->
+								<!--<os:KML id="vungdem" name="vungdem" url="srcview/source/kmlfile/vungdem.kml" 
+								style="{Style.getDefaultLineStyle()}" z="2"/>-->
+								<!--<os:KML id="" name="" url="srcview/source/kmlfile/.kml" 
+								style="{Style.getDrawSurfaceStyle()}" numZoomLevels="30"/>-->
+								<!--<os:KML id="iniLayer" name="iniLayer" url="srcview/source/kmlfile/default.kml"
+								style="{Style.getDefaultLineStyle()}" isFixed="true"/>-->
+								<!--<os:KML id="hao_red" name="hao_red" url="srcview/source/kmlfile/hao_red.kml" 
+								style="{Style.getDefaultLineStyle()}" z="2"/>-->
+								<!--<os:Maplint name="maplint" maxZoomLevel="40" numZoomLevels="40" z="1"/>-->
+								<!--<os:CycleMap name="base" proxy="http://www.openscales.org/proxy.php?url=" maxZoomLevel="30" numZoomLevels="30"/>-->
+								<!--<os:Osmarender name="base" proxy="http://www.openscales.org/proxy.php?url=" />-->
+								<!--<os:KML id="sam" name="states" url="/srcview/source/kmlfile/states.kml"
+								numZoomLevels="20"
+								style="{Style.getDefaultLineStyle()}" z="2"/>-->
+								<!--<os:KML id="q9" name="quan9" url="srcview/source/kmlfile/quan9.kml"
+								color="0xFF556677" visible="true" 
+								numZoomLevels="30"
+								z="2"/>-->
+								<!--<os:KML id="haor" name="haor" url="srcview/source/kmlfile/hao_red.kml"
+								color="0xFF556677" visible="true" 
+								numZoomLevels="30" />
+								<os:KML id="gt1" name="gt1" url="srcview/source/kmlfile/gt_db_d_01.kml"
+								color="0xFF556677" visible="true" 
+								numZoomLevels="30" />-->
+								<!--<os:WFS id="q9" name="IGN - Geopla (France)" url="http://openscales.org/geoserver/wfs"
+								typename="pg:simplif_france" projection="EPSG:2154"
+								version="1.0.0" style="{this.createBitmapStyle()}"/>-->
+								
+								<!--<os:WMS id="wms_ranhtinh" name="tinh_binh_duong" url="http://hcmgisportal.vn/geoserver/wms"
+								right="660" height="300" visible="true" transparent="false"
+								layers="binhduong:rg_tinh" projection="EPSG:32648" format="image/jpeg"/>-->
+								<!--<os:WFS name="Topp States (WFS)" url="http://openscales.org/geoserver/wfs"
+								typename="topp:states" projection="EPSG:4326" version="1.0.0"
+								style="{Style.getDefaultSurfaceStyle()}"/>-->
+								<os:MousePosition x="10"
+												  y="{map_fullwindow_showmap.height-20}" 
+												  />
+								<!--<s:Panel id="panel1" title="Thông tin chi tiết" bottom="0" right="0"
+								move="panel1_moveHandler(event)" alpha="0.5" visible="true"
+								mouseOver="panel1.alpha=1;"
+								mouseOut="panel1.alpha=0.5">
+								<os:FeatureInfo id="featureinfo" 
+								creationComplete="(selectFeature.handler as SelectFeaturesHandler).onSelectedFeature=featureinfo.showInfo"/>
+								</s:Panel>-->
+								<os:DragHandler />
+								<os:ClickHandler />
+								<os:WheelHandler id="control_fullmap_wheel" />
+								<os:Spinner x="20" y="20" />
+								<!--<os:SelectFeaturesHandler id="selectFeature" active="true" enableBoxSelection="false" enableClickSelection="true" enableOverSelection="true"/>-->
+								<os:PanZoom id="control_fullmap_panzoom"
+											right="-300" 
+											y="{map_fullwindow_showmap.y+10}"/>
+								<!--<os:ControlPanel left="10" bottom="20" title="Layers">
+								<os:LayerManager />
+								</os:ControlPanel>-->
+								<os:ScaleLine x="{control_fullmap_panzoom.x}" y="{control_fullmap_panzoom.y+100}"/>
+								<!--<s:BorderContainer id="container_fullmap_show_map_upon_time" width="0" height="0" y="3" x="270" borderAlpha="0">
+								<mx:Image id="imgOpen" source="{IMG_OPEN}" width="0" height="0" buttonMode="true" 
+								mouseUp="currentState='MAP_UPON_TIME'"
+								mouseOver="funcMouseOverImg(event)" mouseOut="funcMouseOutImg(event)"/>
+								</s:BorderContainer>-->
+							</os:Map>
+						</s:Panel>
+					</st:Navigator>
+					
+					<mx:HRule width="100%" strokeWidth="2" strokeColor="#000000" shadowColor="#000000"/>
+					<s:BorderContainer width="100%" height="40" styleName="sortBarBg" borderVisible="false">
+						<s:layout>
+							<s:HorizontalLayout verticalAlign="middle" paddingLeft="10" paddingRight="10"/>
+						</s:layout>
+						<mx:HSlider showTrackHighlight="true" minimum="0" maximum="10" snapInterval="1" dataTipOffset="2" width="90" tickInterval="1" tickLength="3" tickOffset="-1"/>
+					</s:BorderContainer>
+				</s:BorderContainer>
+				<!-- End Middle Panel Area -->
+				
+				<!-- Start Right Panel Area -->
+				
+				<s:BorderContainer id="rightPanel" width="252" height="100%" borderVisible="false" resizeEffect="Resize" cornerRadius="10" backgroundColor="#000000">
+					<s:layout>
+						<s:VerticalLayout gap="0"/>
+					</s:layout>
+					<s:Group width="100%">
+						<s:layout>
+							<s:HorizontalLayout gap="0"/>
+						</s:layout>
+						<s:Group width="100%"  id="histogramGroup">
+							<s:layout>
+								<s:VerticalLayout paddingLeft="6" paddingRight="6" gap="0" paddingTop="6"/>
+							</s:layout>
+							<s:Group width="100%" height="30" >
+								<s:layout>
+									<s:HorizontalLayout verticalAlign="middle" horizontalAlign="right"/>
+								</s:layout>
+								<mx:Button label="Histogram" styleName="sectionButtonRight" toggle="true" height="20" labelPlacement="left" selected="true" click="sizeHistBox()"/>
+							</s:Group>
+							<s:Group width="100%" height="100" styleName="lightGreyBevelBg" id="histBox" resizeEffect="Resize" >
+								<s:layout>
+									<s:VerticalLayout paddingBottom="24" paddingLeft="6" paddingRight="6" paddingTop="6"/>
+								</s:layout>
+								<s:Group width="100%" height="100%" styleName="darkGreyInsetBg">
+									<s:layout>
+										<s:VerticalLayout />
+									</s:layout>
+								</s:Group>
+							</s:Group>
+						</s:Group>
+						<s:BorderContainer width="15" height="100%" backgroundColor="#000000" borderVisible="false">
+							<s:layout>
+								<s:VerticalLayout horizontalAlign="right"/>
+							</s:layout>
+							<s:Group width="13" height="100%" styleName="linesBg">
+								<s:layout>
+									<s:VerticalLayout />
+								</s:layout>
+							</s:Group>
+						</s:BorderContainer>
+					</s:Group>
+					
+					<!-- Start Lower Right Panel Area -->
+					
+					<!--<mx:Canvas width="100%" height="100%" id="rightBottomHolder" verticalScrollPolicy="on">-->
+					<s:BorderContainer width="100%" height="100%" id="rightBottomHolder" borderVisible="false" backgroundColor="#000000">
+
+						<s:Scroller verticalScrollPolicy="auto" width="100%" height="100%">
+							<s:Group width="{rightBottomHolder.width-16}" height="100%" >
+								<s:layout >
+									<s:VerticalLayout paddingBottom="6" paddingLeft="6" paddingRight="0" paddingTop="6" gap="0"/>
+								</s:layout>
+								<s:Group width="100%" height="30" >
+									<s:layout>
+										<s:HorizontalLayout verticalAlign="middle" horizontalAlign="right"/>
+									</s:layout>
+									<mx:Button label="Quick Develop" styleName="sectionButtonRight" toggle="true" height="20" labelPlacement="left" click="sizeQuickBox()"/>
+								</s:Group>
+								<s:Group width="100%" styleName="lightGreyBg"  height="8" id="quickBox" resizeEffect="Resize">
+									<s:layout>
+										<s:VerticalLayout paddingBottom="6" paddingLeft="6" paddingRight="6" paddingTop="6"/>
+									</s:layout>
+								</s:Group>
+								
+								<s:Group width="100%" height="30" >
+									<s:layout>
+										<s:HorizontalLayout verticalAlign="middle" horizontalAlign="right"/>
+									</s:layout>
+									<mx:Button label="Keywording" styleName="sectionButtonRight" toggle="true" height="20" labelPlacement="left" click="sizeKeyBox()"/>
+								</s:Group>
+								
+								<s:BorderContainer width="100%" height="8" cornerRadius="10"   id="keyBox" resizeEffect="Resize" borderVisible="false" backgroundColor="#cccccc">
+									<s:layout>
+										<s:VerticalLayout paddingLeft="1" paddingBottom="2" paddingRight="2" paddingTop="1"/>
+									</s:layout>
+								</s:BorderContainer>
+								
+								<s:Group width="100%" >
+									<s:layout>
+										<s:VerticalLayout horizontalAlign="center" paddingTop="10"/>
+									</s:layout>
+									<mx:Image horizontalAlign="center">
+										<mx:source>@Embed(source='/styles/darkroom.swf',symbol='finial')</mx:source>
+									</mx:Image>
+								</s:Group>
+							</s:Group>
+						</s:Scroller>
+					</s:BorderContainer>
+					
+					<mx:HBox width="100%" horizontalGap="0">
+						<mx:VBox width="100%" horizontalAlign="center" paddingLeft="6" paddingRight="6" paddingBottom="4" id="rightBottomBttns">
+							<mx:HRule width="100%"/>
+							<mx:HBox width="100%" horizontalGap="6" horizontalAlign="center">
+								<mx:Button label="Sync Settings" width="106" height="30" fontSize="16" enabled="false"/>
+								<mx:Button label="Sync Meta Data" height="30" fontSize="16" enabled="false" width="116"/>
+							</mx:HBox>
+						</mx:VBox>
+						<s:BorderContainer width="15" height="100%" backgroundColor="#000000" borderVisible="false">
+							<s:layout>
+								<s:VerticalLayout horizontalAlign="right"/>
+							</s:layout>
+							<mx:VBox width="13" height="100%" styleName="linesBg"/>
+						</s:BorderContainer>
+					</mx:HBox>
+					
+					<!-- End Lower Right Panel Area -->
+					
+				</s:BorderContainer>
+				
+				<!-- End Right Panel Area -->
+				
+			</mx:HDividedBox>
+			
+			<mx:VBox width="14" height="100%" verticalAlign="middle" horizontalAlign="right" paddingRight="2">
+				<mx:Button width="14" height="20" click="sizeRightPanel();" toggle="true" styleName="collapseRight" resizeEffect="Resize"/>
+			</mx:VBox>
+		</mx:HBox>
+		<!-- Start Bottom Panel Area -->
+		
+		<s:Group width="100%"  id="bottomPanel" resizeEffect="Resize">
+			<s:layout>
+				<s:VerticalLayout paddingLeft="14" paddingRight="14"/>
+			</s:layout>
+			<s:Group width="100%"  height="30" >
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle" paddingTop="2"/>
+				</s:layout>
+				<s:Group >
+					<s:layout>
+						<s:VerticalLayout paddingTop="4"/>
+					</s:layout>
+					<mx:ComboBox prompt="0 photos">
+						<mx:dataProvider>
+							<fx:Array>
+								<fx:Object label="Item"/>
+								<fx:Object label="Item"/>
+								<fx:Object label="Item"/>
+								<fx:Object label="Item"/>
+								<fx:Object label="Item"/>
+							</fx:Array>
+						</mx:dataProvider>
+					</mx:ComboBox>
+				</s:Group>
+				<mx:Spacer height="10" width="100%"/>
+				<mx:Button styleName="toggleSwitch" height="16" toggle="true" width="16"/>
+			</s:Group>
+			<s:BorderContainer width="100%"  height="92" borderStyle="solid" borderColor="#666666" borderWeight="1" backgroundColor="#000000">
+				<s:layout>
+					<s:HorizontalLayout paddingBottom="2" paddingLeft="2" paddingRight="2" paddingTop="2" verticalAlign="top"/>
+				</s:layout>
+				<!--<mx:HorizontalList height="100%" borderStyle="none" width="100%" styleName="lightBoxBg" dataProvider="{imageData.image}" itemRenderer="renderItems.imageRender" columnWidth="100" horizontalScrollPolicy="on" horizontalScrollBarStyleName="trayScrollBar">
+				</mx:HorizontalList>-->
+			</s:BorderContainer>
+		</s:Group>
+		
+		<!-- End Bottom Panel Area -->
+		<s:Group width="100%" height="14" >
+			<s:layout>
+				<s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
+			</s:layout>
+			<mx:Button width="20" height="8" styleName="collapseDown" toggle="true" click="sizeBottomPanel();"/>
+		</s:Group>
+		
+	</s:BorderContainer>
+	<fx:Script>
+		<![CDATA[
+			import gov.hcmgis.flash.skins.PanelSkin;
+			import gov.hcmgis.flash.skins.skin4Slider;
+			
+			import mx.collections.XMLListCollection;
+			import mx.core.mx_internal;
+			import mx.events.FlexEvent;
+			
+			import org.openscales.fx.control.Pan;
+			public function sizeTopPanel():void
+			{
+				if (topPanel.height<=2) {
+					topPanel.height=32;
+				}
+				else if (topPanel.height>=2){
+					topPanel.height=2;
+				}
+			}
+			public function sizeLeftPanel():void
+			{
+				if (leftPanel.width<=0) {
+					leftPanel.width=246;
+				}
+				else if (leftPanel.width>=0){
+					leftPanel.width=0;
+				}
+			}
+//			/*  Collapse : Expand Navigator Box */
+			public function sizeNavBox():void
+			{
+				if (navBox.height<=8) {
+					navBox.height=200;
+				}
+				else if (navBox.height>=8){
+					navBox.height=8;
+				}
+			}
+//			
+//			/*  Collapse : Expand Library Box */
+			public function sizeLibraryBox():void
+			{
+				if (libBox.height<=8) {
+					libBox.height=200;
+				}
+				else if (libBox.height>=8){
+					libBox.height=8;
+				}
+			}
+//			
+//			/*  Collapse : Expand Find Box */
+			public function sizeFindBox():void
+			{
+				if (findBox.height<=6) {
+					findBox.height=200;
+				}
+				else if (findBox.height>=6){
+					findBox.height=6;
+				}
+			}
+//			
+//			/*  Collapse : Expand Folders Box */
+			public function sizeFolderBox():void
+			{
+				if (folderBox.height<=6) {
+					folderBox.height=200;
+				}
+				else if (folderBox.height>=6){
+					folderBox.height=6;
+				}
+			}
+//			
+//			// Initialize the data provider for the Tree.
+			private function initTree():void {
+				tree.dataProvider = treeData;
+			}
+//			
+//			/*  Collapse : Expand Collections Box */
+			public function sizeCollectBox():void
+			{
+				if (collectBox.height<=8) {
+					collectBox.height=200;
+				}
+				else if (collectBox.height>=8){
+					collectBox.height=8;
+				}
+			}
+//			
+//			/*  Collapse : Expand Keyword Tags Box */
+			public function sizeTagBox():void
+			{
+				if (tagsBox.height<=8) {
+					tagsBox.height=200;
+				}
+				else if (tagsBox.height>=8){
+					tagsBox.height=8;
+				}
+			}
+//			
+//			/*  Collapse : Expand Metadata Browser Box */
+			public function sizeMetaBox():void
+			{
+				if (metaBox.height<=8) {
+					metaBox.height=200;
+				}
+				else if (metaBox.height>=8){
+					metaBox.height=8;
+				}
+			}
+			
+			private var menuBarXML:XMLList =
+				<>
+					<menuitem label="Item 1">
+						<menuitem label="Item 1">
+							<menuitem label="Item 1"/>
+							<menuitem label="Item 2"/>
+							<menuitem label="Item 3"/>
+						</menuitem>
+						<menuitem label="Item 2">
+							<menuitem label="Item 1"/>
+							<menuitem label="Item 2"/>
+						</menuitem>
+						<menuitem label="Item 3">
+							<menuitem label="Item 1"/>
+							<menuitem label="Item 2"/>
+							<menuitem label="Item 3"/>
+							<menuitem label="Item 4"/>
+							<menuitem label="Item 5"/>
+						</menuitem>
+					</menuitem>
+					<menuitem label="Item 2">
+						<menuitem label="Item 1">
+							<menuitem label="Item 1"/>
+							<menuitem label="Item 2"/>
+							<menuitem label="Item 3"/>
+						</menuitem>
+					</menuitem>
+					<menuitem label="Item 3">
+						<menuitem label="Item 1">
+							<menuitem label="Item 1"/>
+							<menuitem label="Item 2"/>
+							<menuitem label="Item 3"/>
+						</menuitem>
+						<menuitem label="Item 2">
+							<menuitem label="Item 1"/>
+							<menuitem label="Item 2"/>
+						</menuitem>
+					</menuitem>
+				</>;
+			
+//			/*  Collapse : Expand Keywording Box */
+			public function sizeKeyBox():void
+			{
+				if (keyBox.height<=8) {
+					keyBox.height=200;
+				}
+				else if (keyBox.height>=8){
+					keyBox.height=0;
+				}
+			}
+//			
+//			/*  Collapse : Expand Quick Develop Box */
+			public function sizeQuickBox():void
+			{
+				if (quickBox.height<=8) {
+					quickBox.height=200;
+				}
+				else if (quickBox.height>=8){
+					quickBox.height=8;
+				}
+			}
+//			
+//			/*  Collapse : Expand Histogram Box */
+			public function sizeHistBox():void
+			{
+				if (histBox.height<=6) {
+					histBox.height=100;
+				}
+				else if (histBox.height>=6){
+					histBox.height=6;
+				}
+			}
+//			
+//			/*  Collapse : Expand RightPanel */
+			public function sizeRightPanel():void
+			{
+				if (rightPanel.width<=0) {
+					rightPanel.visible=true;
+					rightPanel.width=252;
+				}
+				else if (rightPanel.width>=0){
+					rightPanel.width=0;
+					rightPanel.visible=false;
+				}
+			}
+//			
+//			/*  Collapse : Expand Bottom Panel */
+			public function sizeBottomPanel():void
+			{
+				if (bottomPanel.height<=0) {
+					bottomPanel.height=128;
+				}
+				else if (bottomPanel.height>=0){
+					bottomPanel.height=0;
+				}
+			}
+			private function labelFunction( item:Panel ):String
+			{
+				return item.title;
+			}
+			
+			[Bindable]
+			public var menuBarCollection:XMLListCollection;
+			
+			//Initialize Data Collections.
+			private function initCollections():void {
+				menuBarCollection = new XMLListCollection(menuBarXML);
+			}
+			
+			private function panel_creationCompleteHandler(event:FlexEvent):void
+			{
+				var skin:PanelSkin = pnlVideo.skin as PanelSkin;
+				skin.titlePanel.includeInLayout = false;
+				skin.titlePanel.visible = false;
+			}
+			
+			//dung cho video
+			private var isMoving:Boolean=false;
+			private function showControls():void {
+				fadeIn.play([controls]);
+			}
+			
+			private function hideControls():void {
+				fadeOut.play([controls]);
+			}
+			
+			private function videoDisplay_playheadUpdate(evt:VideoEvent):void {
+				var pTime:Date = new Date(player.playheadTime * 1000 || 100);
+				var tTime:Date = new Date(player.totalTime * 1000);
+				time.text = dateFormatter.format(pTime) + " / " + dateFormatter.format(tTime);
+			}
+			
+			private function playPauseButton_click(evt:MouseEvent):void {
+				if (player.playing) {
+					player.pause();
+				} else {
+					player.play();
+				}
+			}
+			
+			private function stopButton_click(evt:MouseEvent):void {
+				player.stop();
+			}
+			
+			private function slider_thumbRelease():void {
+				if(!isMoving)
+				{
+					player.playheadTime = slider.value;
+					player.play();
+				}
+			}
+			
+			private function slider_thumbPress():void {
+				player.pause();
+			}
+			//endregion
+		]]>
+	</fx:Script>
+</s:Application>
